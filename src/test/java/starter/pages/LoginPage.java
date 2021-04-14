@@ -26,6 +26,7 @@ public class LoginPage extends UIInteractionSteps
     public void verify_title(String title)
     {
         getDriver().getTitle().contains(title);
+        System.out.println("Hello");
     }
     
 
