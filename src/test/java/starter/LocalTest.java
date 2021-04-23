@@ -1,16 +1,20 @@
-package parallel;
+package starter;
+
+
 
 import io.cucumber.junit.CucumberOptions;
+import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.cucumber.CucumberWithSerenity;
 import org.junit.runner.RunWith;
+
 
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(
         plugin = {"pretty"},
         strict = true,
         monochrome=true,
-        glue = {"src.test.java"},
-        features = "src/test/resources/parallel"
-
+        glue = {"starter.stepdefinitions"},
+        features = "src/test/resources/features/search"
 )
-public class RunCucumberIT {}
+
+public class LocalTest extends PageObject {}
