@@ -1,12 +1,18 @@
-package com.browserstack.cucumber;
-
-import com.browserstack.BrowserStackSerenityTest;
-
-import io.cucumber.junit.CucumberOptions;
-import net.serenitybdd.cucumber.CucumberWithSerenity;
-import org.junit.runner.RunWith;
-
-@RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features/single.feature")
-public class ParallelIETest extends BrowserStackSerenityTest {
-}
+//package com.browserstack.cucumber;
+//
+//import com.browserstack.BrowserStackSerenityTest;
+//
+//import io.cucumber.junit.CucumberOptions;
+//import net.serenitybdd.cucumber.CucumberWithSerenity;
+//import org.junit.runner.RunWith;
+//
+//@RunWith(CucumberWithSerenity.class)
+//@CucumberOptions(
+//        plugin = {"pretty"},
+//        strict = true,
+//        monochrome=true,
+//        glue = {"starter.stepdefinitions"},
+//        features = "src/test/resources/features/search"
+//)
+//public class ParallelIETest extends BrowserStackSerenityTest {
+//}

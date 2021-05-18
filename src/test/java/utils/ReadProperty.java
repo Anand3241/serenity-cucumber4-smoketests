@@ -44,7 +44,7 @@ public class ReadProperty extends PageObject
 		Properties Pro = new Properties();
 		FileInputStream fis = new FileInputStream(new File(folder));
 		Pro.load(fis);
-		return Pro.getProperty("enviornment");
+		return Pro.getProperty("runningenviornment");
 	}
 
 

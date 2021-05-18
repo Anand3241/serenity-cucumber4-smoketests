@@ -291,7 +291,10 @@
                             <forkCount>4</forkCount>
                             <reuseForks>true</reuseForks>
                             <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
-
+                            <systemPropertyVariables>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <environment>parallel_${surefire.forkNumber}</environment>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
