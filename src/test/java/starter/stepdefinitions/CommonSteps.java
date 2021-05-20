@@ -9,6 +9,7 @@ import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.util.EnvironmentVariables;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -45,6 +46,7 @@ public class CommonSteps extends PageObject
         String url = ReadProperty.readEnviornmentProperty(file,arg0);
 
         getDriver().get(url);
+
     }
 
     @Then("User click on {string} with value {string}")
@@ -89,6 +91,8 @@ public class CommonSteps extends PageObject
         WebElementFacade button = $(CommonSteps.getBy("xpath", locator ));
         button.waitUntilClickable();
         button.click();
+        String titile = getDriver().getTitle();
+        System.out.println("The title is  "+titile);
     }
 
     @When("User click on link {string}")
@@ -155,5 +159,44 @@ public class CommonSteps extends PageObject
     }
 
 
+    @Then("User verify {string} this {string}")
+    public void userVerifyThis(String arg0, String arg1) throws IOException {
 
+        switch (arg0.toLowerCase())
+        {
+            case "title":
+                String expectedTitle = getDriver().getTitle();
+                folder =  EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("webdriver.base.url");
+                String file = ReadProperty.readEnviornment(folder);
+
+                String  actualTitle = ReadProperty.readEnviornmentProperty(file,arg1);
+
+                Assert.assertEquals(expectedTitle,actualTitle);
+                break;
+
+            case "link":
+                String locator = "//*[text()='"+arg1+"']|//a[contains(text(),'"+arg1+"')]";
+                WebElementFacade button = $(CommonSteps.getBy("xpath", locator ));
+                button.waitUntilClickable();
+                Boolean enable =button.isClickable();
+                Assert.assertTrue(enable);
+                break;
+
+            case "text":
+                String locatorType = getLocatorfromORPropertyFile(arg1).split("~")[0];
+                String locatorValue = getLocatorfromORPropertyFile(arg1).split("~")[1];
+                waitForpresenceOfElementLocated(getBy(locatorType, locatorValue));
+                boolean visible = $(CommonSteps.getBy(locatorType, locatorValue)).isDisplayed();
+                Assert.assertTrue(visible);
+                break;
+
+            default:
+                System.out.println("No match Found");
+                break;
+
+
+        }
+
+
+    }
 }

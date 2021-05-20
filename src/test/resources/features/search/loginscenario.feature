@@ -10,6 +10,10 @@ Feature: Login to ZeeCMS
     Then User Enter text "username" in "enter_email" field
     Then User Enter text "password" in "enter_pass" field
     Then User click on button "Sign in"
+    Then User verify "title" this "Dashboard_title_name"
+    Then User verify "link" this "Movie"
+    Then User verify "text" this "Dashboard"
+
 #
 #
 #  Scenario: Log out
