@@ -7,12 +7,19 @@ Feature: Login to ZeeCMS
     #Given Launch Url "<Url>"
     Given Launch Url Application "TestURL"
     When User click on button "Login with ADFS"
-    Then User Enter text "username" in "enter_email" field
-    Then User Enter text "password" in "enter_pass" field
+    Then User Enter text "$username" in "$enter_email" field
+    Then User Enter text "$password" in "$enter_pass" field
     Then User click on button "Sign in"
+
     Then User verify "title" this "Dashboard_title_name"
     Then User verify "link" this "Movie"
     Then User verify "text" this "Dashboard"
+    And User reload the page
+    When generate random "number" with size "3" to variable "variable_name"
+    When generate random "alphanumeric" with size "30" to variable "variable_name"
+    When generate random "email" with size "5" to variable "variable_name"
+    When generate random "characters" with size "30" to variable "variable_name"
+
 
 #
 #

@@ -1,5 +1,6 @@
 package starter.stepdefinitions;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -18,15 +19,20 @@ import utils.ReadProperty;
 import utils.ServerConfig;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class CommonSteps extends PageObject
 {
+
 
     EnvironmentVariables environmentVariables;
     public static String folder="";
     
     ServerConfig serverConfig;
-
+    int random_number;
+    String random_alphaNumeric;
+    String random_email;
+    String random_character;
 
 
     @Steps
@@ -39,13 +45,14 @@ public class CommonSteps extends PageObject
     @Given("Launch Url Application {string}")
     public void launchUrlApplication(String arg0) throws IOException
     {
-         folder =  EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("webdriver.base.url");
-        String file = ReadProperty.readEnviornment(folder);
 
+            folder = EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("webdriver.base.url");
+            String file = ReadProperty.readEnviornment(folder);
 
-        String url = ReadProperty.readEnviornmentProperty(file,arg0);
+            String url = ReadProperty.readEnviornmentProperty(file, arg0);
 
-        getDriver().get(url);
+            getDriver().get(url);
+
 
     }
 
@@ -58,16 +65,20 @@ public class CommonSteps extends PageObject
     }
 
 
-    @Then("User Click on {string}")
-    public void user_Click_on(String string) throws IOException {
-        String locatorType = getLocatorfromORPropertyFile(string).split("~")[0];
-        String locatorValue = getLocatorfromORPropertyFile(string).split("~")[1];
-        waitForpresenceOfElementLocated(getBy(locatorType, locatorValue));
-        $(CommonSteps.getBy(locatorType, locatorValue)).click();
-    }
+//    @Then("User Click on {string}")
+//    public void user_Click_on(String string) throws IOException {
+//        String locatorType = getLocatorfromORPropertyFile(string).split("~")[0];
+//        String locatorValue = getLocatorfromORPropertyFile(string).split("~")[1];
+//        waitForpresenceOfElementLocated(getBy(locatorType, locatorValue));
+//        $(CommonSteps.getBy(locatorType, locatorValue)).click();
+//    }
 
     @Then("User Enter text {string} in {string} field")
-    public void user_Enter_text_in(String string, String string2) throws IOException {
+    public void user_Enter_text_in(String string, String string2) throws IOException
+    {
+
+        string = string.replaceAll("[$&+,:;=?@#|'<>.-^*()%!]", " ").trim();
+        string2 = string2.replaceAll("[$&+,:;=?@#|'<>.-^*()%!]", " ").trim();
         String locatorType = getLocatorfromORPropertyFile(string2).split("~")[0];
         String locatorValue = getLocatorfromORPropertyFile(string2).split("~")[1];
         waitForpresenceOfElementLocated(getBy(locatorType, locatorValue));
@@ -86,27 +97,52 @@ public class CommonSteps extends PageObject
     }
 
     @When("User click on button {string}")
-    public void user_click_on_button(String string) throws IOException {
-        String locator = "//*[text()='"+string+"']|//button[text()='"+string+"']";
-        WebElementFacade button = $(CommonSteps.getBy("xpath", locator ));
-        button.waitUntilClickable();
-        button.click();
-        String titile = getDriver().getTitle();
-        System.out.println("The title is  "+titile);
+    public void user_click_on_button(String string) throws IOException
+    {
+
+        if (string.contains("$"))
+        {
+            string = string.replaceAll("[$&+,:;=?@#|'<>.-^*()%!]", " ").trim();
+
+
+
+            String locatorType = getLocatorfromORPropertyFile(string).split("~")[0];
+            String locatorValue = getLocatorfromORPropertyFile(string).split("~")[1];
+            waitForpresenceOfElementLocated(getBy(locatorType, locatorValue));
+            $(CommonSteps.getBy(locatorType, locatorValue)).click();
+            }
+        else {
+            String locator = "//*[text()='" + string + "']|//button[text()='" + string + "']";
+            WebElementFacade button = $(CommonSteps.getBy("xpath", locator));
+            button.waitUntilClickable();
+            button.click();
+            String titile = getDriver().getTitle();
+            System.out.println("The title is  " + titile);
+        }
     }
 
     @When("User click on link {string}")
-    public void user_click_on_link(String string) throws IOException {
-        String locator = "//a[text()='"+string+"']|//a[contains(text(),'"+string+"')]";
-        WebElementFacade button = $(CommonSteps.getBy("xpath", locator ));
-        button.waitUntilClickable();
-        button.click();
+    public void user_click_on_link(String string) throws IOException
+    {
+        if (string.contains("$"))
+        {
+            string = string.replaceAll("[$&+,:;=?@#|'<>.-^*()%!]", " ").trim();
+
+
+
+            String locatorType = getLocatorfromORPropertyFile(string).split("~")[0];
+            String locatorValue = getLocatorfromORPropertyFile(string).split("~")[1];
+            waitForpresenceOfElementLocated(getBy(locatorType, locatorValue));
+            $(CommonSteps.getBy(locatorType, locatorValue)).click();
+        }
+        else {
+            String locator = "//a[text()='" + string + "']|//a[contains(text(),'" + string + "')]";
+            WebElementFacade button = $(CommonSteps.getBy("xpath", locator));
+            button.waitUntilClickable();
+            button.click();
+        }
     }
 
-    @Then("User enter credentials from excel row {string}")
-    public void user_enter_credentials_from_excel_row(String string) throws IOException {
-//    	System.out.println(TestURL);
-    }
 
     public static By getBy(String locatorType, String locatorValue) throws IOException
     {
@@ -155,7 +191,11 @@ public class CommonSteps extends PageObject
 
     public String getLocatorfromORPropertyFile(String propertyName) throws IOException
     {
-        return ReadProperty.getProperty(propertyName);
+        folder =  EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("webdriver.base.url");
+        String file = ReadProperty.readEnviornment(folder);
+        String pro = ReadProperty.readEnviornmentProperty(file, propertyName);
+
+        return pro;
     }
 
 
@@ -194,6 +234,87 @@ public class CommonSteps extends PageObject
                 System.out.println("No match Found");
                 break;
 
+
+        }
+
+
+    }
+
+    @And("User reload the page")
+    public void userReloadThePage()
+    {
+        getDriver().navigate().refresh();
+    }
+
+    @When("generate random {string} with size {string} to variable {string}")
+    public void generateRandomWithSizeToVariable(String arg0, String arg1, String arg2)
+    {
+
+        switch (arg0.toLowerCase())
+        {
+            
+            case "number":
+                
+                int m = (int) Math.pow(10, Integer.parseInt(arg1) - 1);
+                int numb = m + new Random().nextInt(9 * m);
+                random_number=numb;
+                System.out.println("Random number is "+ random_number);
+                break;
+
+
+            case "alphanumeric":
+                String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        + "0123456789"
+                        + "abcdefghijklmnopqrstuvxyz";
+                StringBuilder sb = new StringBuilder(Integer.parseInt(arg1));
+                for (int i = 0; i < Integer.parseInt(arg1); i++)
+                {
+
+                    int index = (int)(AlphaNumericString.length() * Math.random());
+
+                    sb.append(AlphaNumericString.charAt(index));
+                }
+                 arg2=sb.toString();
+                 random_alphaNumeric=arg2;
+                System.out.println("Random alphanumeric is "+ random_alphaNumeric);
+                break;
+
+            case "email":
+                String possibleEmailString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        + "0123456789"
+                        + "abcdefghijklmnopqrstuvxyz";
+                StringBuilder sc = new StringBuilder(Integer.parseInt(arg1));
+                for (int i = 0; i < Integer.parseInt(arg1); i++)
+                {
+
+                    int index = (int)(possibleEmailString.length() * Math.random());
+
+                    sc.append(possibleEmailString.charAt(index));
+                }
+                arg2=sc.toString();
+                random_email = arg2+"@gmail.com";
+                System.out.println("The email is " + random_email);
+                break;
+
+            case "characters":
+                String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        + "abcdefghijklmnopqrstuvxyz";
+                StringBuilder ch = new StringBuilder(Integer.parseInt(arg1));
+                for (int i = 0; i < Integer.parseInt(arg1); i++)
+                {
+
+                    int index = (int)(characters.length() * Math.random());
+
+                    ch.append(characters.charAt(index));
+                }
+                arg2=ch.toString();
+                random_character=arg2;
+                System.out.println("Random characters is "+ random_character);
+                break;
+
+
+            default:
+                System.out.println("No input found");
 
         }
 
